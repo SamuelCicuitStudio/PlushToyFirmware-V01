@@ -1,6 +1,6 @@
 ---
 
-# SmartPlushToy Firmware V1.0.0
+# SmartPlushToy Firmware Version:1.0.0
 
 Welcome to the **SmartPlushToy** firmware repository! This project provides firmware for an ESP32-based plush toy designed for interaction with children through audio feedback, LED displays, games, and more. This document describes the overall architecture, class structure, and basic usage information for developers working on or contributing to this project.
 
