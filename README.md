@@ -22,6 +22,10 @@ Each manager encapsulates functionality for different components of the toy, mak
 
 - **SpeakerManager**: Manages the toy’s audio output. Handles I2S communication with the speaker driver and integrates with the **TextToSpeechManager** and **WavFileReader** classes for audio playback.
 
+- **I2SManager**: Manages I2S communication specifically for audio output. Responsible for configuring I2S parameters, transmitting audio data to the speaker, and integrating with **SpeakerManager**.
+
+- **WiFiManager**: Handles all Wi-Fi connectivity, including connecting to networks, managing credentials, and handling disconnections. Works with **OtaManager** for firmware updates over Wi-Fi.
+
 - **SDCardManager**: Manages interactions with the SD card, including mounting, reading, and writing files, with support for loading and saving audio files.
 
 - **SPIFlashManager**: Manages interactions with the onboard flash memory for storage of non-volatile data, including firmware updates and cached configurations.
@@ -53,24 +57,41 @@ Each manager encapsulates functionality for different components of the toy, mak
 Below is an overview of how the classes interact in the **SmartPlushToy** system:
 
 1. **Startup & Initialization**: The system starts by initializing **Config.h** and **Configuration.h**, setting up default parameters.
-2. **Power Management**: **PowerManager** checks battery status and sets constraints for system operation (e.g., disables games when battery is low).
-3. **I/O Management**:
+2. **Power Management**: **PowerManager** checks battery status and sets constraints for system operation (e.g., disables games when the battery is low).
+3. **Wi-Fi Management**: **WiFiManager** establishes connections, handles credentials, and communicates with **OtaManager** for firmware updates.
+4. **I/O Management**:
    - **MicManager** collects audio input data.
-   - **SpeakerManager** provides audio output for responses and game sounds.
-4. **Data Handling**:
+   - **SpeakerManager** provides audio output for responses and game sounds, utilizing **I2SManager** to transmit audio data.
+5. **Data Handling**:
    - **SDCardManager** and **SPIFlashManager** manage audio and configuration data.
    - **WavFileReader** and **WavFileWriter** provide data interfaces for reading and saving `.wav` files.
-5. **Interactive Features**:
+6. **Interactive Features**:
    - **VocalCommandManager** processes user commands and initiates interactions.
    - **RandomBehaviorManager** and **GameManager** provide feedback and engage users through LED animations, audio, and vibrations.
-6. **Text and Audio Processing**:
+7. **Text and Audio Processing**:
    - **TextToSpeechManager** generates responses, while **SpeechToTextManager** converts audio to text for command recognition.
 
 ### Example Flow: "Play Sound" Command
 
 1. **MicManager** captures audio, and **SpeechToTextManager** identifies the "play sound" command.
-2. **VocalCommandManager** triggers **SpeakerManager** to play an audio file, using **WavFileReader** to load data from the SD card.
+2. **VocalCommandManager** triggers **SpeakerManager**, which uses **I2SManager** to play an audio file, loading data via **WavFileReader** from the SD card.
 3. **RandomBehaviorManager** may trigger LED animations or vibration patterns to accompany the sound.
+
+## Class Interaction Pointers
+
+Here's a summary of which classes will call or depend on each other:
+
+- **Main Program**: Initializes **Configuration** and sets up the main loop.
+- **Configuration**: Interacts with **PowerManager**, **WiFiManager**, **GPIOManager**, **SDCardManager**, **SPIFlashManager** for initialization.
+- **PowerManager**: Monitors battery state, interacts with **RandomBehaviorManager** for power-based constraints.
+- **WiFiManager**: Interacts with **OtaManager** for updates and may call methods in **Configuration** to save Wi-Fi credentials.
+- **MicManager**: Supplies audio data to **SpeechToTextManager**.
+- **SpeechToTextManager**: Sends recognized text commands to **VocalCommandManager**.
+- **VocalCommandManager**: Initiates actions in **SpeakerManager**, **RandomBehaviorManager**, and **GameManager** based on voice commands.
+- **SpeakerManager**: Utilizes **I2SManager** for audio output, gets audio files from **WavFileReader** and passes audio to the speaker.
+- **I2SManager**: Interacts with **SpeakerManager** for configuring and sending audio data.
+- **SDCardManager**: Provides access to audio files for **WavFileReader** and **WavFileWriter**.
+- **WavFileReader/WavFileWriter**: Read/write audio data to and from the SD card, providing data to **SpeakerManager**.
 
 ## Getting Started
 
@@ -97,4 +118,4 @@ Feel free to open issues, suggest features, or contribute directly with pull req
 
 This project is licensed under the MIT License.
 
---- 
+---
