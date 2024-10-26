@@ -614,7 +614,59 @@ void loop() {
 ## Summary
 The `SDCardManager` class provides an easy-to-use interface for managing file operations on an SD card in embedded applications, particularly for audio recording. It ensures reliable recording management with minimal code overhead, supporting efficient file handling for continuous or sequential recordings.
 ```
+## MicManager Class
 
+The `MicManager` class provides a structured approach for managing audio input through an I2S-based microphone. It offers essential functionalities such as gain control, high-pass filtering, and direct reading of microphone output, making it ideal for applications requiring clear, filtered audio data.
+
+### Key Features
+- **Gain Control**: Dynamically adjust the microphone gain to suit specific audio requirements.
+- **High-Pass Filtering**: Removes low-frequency noise and DC offset from microphone readings, delivering a cleaner audio signal.
+- **Real-Time Data Retrieval**: Access real-time microphone output through a straightforward API, suitable for audio processing or analysis.
+
+### Dependencies
+- **I2SManager**: Ensures proper setup and communication with the I2S peripheral, required for microphone operation.
+- **Arduino Library**: Provides foundational Arduino functions and data types.
+
+### Class Interface
+
+- **Constructor**
+  - `MicManager()`: Initializes the `MicManager` class with default filter settings.
+
+- **Public Methods**
+  - `void begin()`: Initializes the microphone hardware and prepares it for capturing audio data.
+  - `void setGain(int gain)`: Sets the microphone gain level, allowing for sensitivity adjustment based on application needs.
+  - `int readOutput()`: Retrieves the current microphone output after applying high-pass filtering.
+
+### Private Members
+- `alpha`: The filter coefficient used in the high-pass filter to control noise attenuation.
+- `lastMicValue`: Stores the previous microphone reading for use in the high-pass filter calculation.
+- `filteredMicValue`: Holds the current high-pass filtered value, giving a smoothed output for consistent data readings.
+
+### Usage Example
+
+```cpp
+#include "MicManager.h"
+
+MicManager mic;
+
+void setup() {
+    Serial.begin(9600);
+    mic.begin();       // Initialize the microphone
+    mic.setGain(5);    // Set microphone gain as needed
+}
+
+void loop() {
+    int audioData = mic.readOutput();  // Retrieve the filtered microphone data
+    Serial.println(audioData);         // Output the audio data to the serial monitor
+    delay(10);
+}
+```
+
+### Additional Notes
+- **Filtering**: The `readOutput` method applies a high-pass filter to reduce low-frequency noise, making the class particularly useful in environments where audio clarity is critical.
+- **Gain Configuration**: `setGain` can be fine-tuned for applications with varying audio sensitivity requirements, such as voice recognition or sound detection.
+  
+This class is designed to be simple and effective for real-time audio data collection, making it versatile for projects involving voice commands, environmental noise monitoring, or other audio-based features.
 ## Getting Started
 
 ### Prerequisites
@@ -641,3 +693,4 @@ Feel free to open issues, suggest features, or contribute directly with pull req
 This project is licensed under the MIT License.
 
 --- 
+
