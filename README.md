@@ -295,7 +295,7 @@ void loop() {
 
 Here's an expanded GitHub description for the `WiFiManager` class, including detailed comments and a usage example:
 
-### WiFiManager Class
+# WiFiManager Class
 
 The `WiFiManager` class provides an efficient and user-friendly way to manage Wi-Fi connectivity for ESP32 devices. It simplifies the process of connecting to a Wi-Fi network or initiating an access point (AP) mode for user configuration. Leveraging the ESPAsyncWebServer library, this class serves web pages for Wi-Fi setup and GPIO control, enabling seamless user interaction.
 
