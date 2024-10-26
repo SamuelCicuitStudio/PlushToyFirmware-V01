@@ -7,6 +7,14 @@ Welcome to the **SmartPlushToy** firmware repository! This project provides firm
 ## Project Structure
 
 The firmware for SmartPlushToy is modular, with each key system component encapsulated in separate classes for better code organization, modularity, and maintainability. Below is an overview of each primary class, its purpose, and interconnections within the system.
+### 0. Quick navigation
+Here's a quick navigation guide to access the different class descriptions:
+
+- [**PowerManager Class**](#powermanager-class)
+- [**ConfigManager Class**](#configmanager-class)
+- [**WiFiManager Class**](#wifimanager-class)
+- [**OtaManager Class**](#otamanager-class)
+
 
 ### 1. Configuration Files
 - **`Config.h`**: Contains global constants and system-wide `#define` directives. Includes default values for GPIO pins, partition configurations, security credentials (passwords), etc. This file acts as a central configuration point for all other classes.
