@@ -18,7 +18,9 @@ Here's a quick navigation guide to access the different class descriptions:
 - [**I2SManager Class**](#i2smanager-class)
 - [**SDCardManager Class**](#sdcardmanager-class)
 - [**MicManager Class**](#micmanager-class)
-
+- [**WAVFileReader Class**](#wavfilereader-class)
+- [**WAVFileWriter Class**](#wavfilewriter-class)
+- [**SpeakerManager Class**](#speaker-manager-class)
 
 ### 1. Configuration Files
 - **`Config.h`**: Contains global constants and system-wide `#define` directives. Includes default values for GPIO pins, partition configurations, security credentials (passwords), etc. This file acts as a central configuration point for all other classes.
@@ -140,8 +142,13 @@ The following diagram illustrates the dependency flow among the various classes 
                                │           │                  │
                                ▼           ▼                  ▼
                      ┌────────────┐   ┌──────────────┐   ┌──────────────┐
-                     │ MicManager │   │SpeakerManager│   │ SDCardManager│
+                     │ MicManager │   │WavFileReader │   │ WavFileWriter│
                      └────────────┘   └──────────────┘   └──────────────┘
+                                           │
+                                           ▼
+                                   ┌──────────────────┐
+                                   │  SpeakerManager   │
+                                   └──────────────────┘
                                            │
                                            ▼
                                    ┌──────────────────┐
@@ -159,19 +166,9 @@ The following diagram illustrates the dependency flow among the various classes 
                                    └──────────────────┘
                                            │
                                            ▼
-                                   ┌──────────────────┐
-                                   │   WavFileReader  │
-                                   └──────────────────┘
-                                           │
-                                           ▼
-                                   ┌──────────────────┐
-                                   │   WavFileWriter  │
-                                   └──────────────────┘
-                                           │
-                                           ▼
                                ┌───────────┼───────────┐
-                               │                       │
-                               ▼                       ▼
+                               │           │           │
+                               ▼           ▼           ▼
                      ┌─────────────────┐   ┌─────────────┐
                      │SpeechToText     │   │TextToSpeech │
                      │ Manager         │   │ Manager     │
@@ -188,6 +185,7 @@ The following diagram illustrates the dependency flow among the various classes 
                                           ┌───────────────────────┐
                                           │   VocalCommandManager │
                                           └───────────────────────┘
+
 ```
 
 ### Explanation
@@ -677,7 +675,260 @@ void loop() {
 ## Conclusion
 
 The `MicManager` class simplifies the process of working with I2S microphones in Arduino projects, providing a user-friendly interface to manage microphone settings and ensure high-quality audio input. Whether you're building a voice assistant, a sound recording device, or an interactive audio system, `MicManager` is a valuable tool in your development toolkit.
+
+## WAVFileReader Class
+
+The `WAVFileReader` class is designed to facilitate the reading and playback of WAV audio files from an SD card on the ESP32 platform. This class handles the complexities of parsing WAV file headers and efficiently streaming audio samples to an I2S output interface, enabling high-quality audio playback in various applications, such as music players or interactive audio experiences.
+
+#### Key Features:
+- **WAV File Parsing**: 
+  - Automatically reads and parses the WAV file header to extract essential audio properties like sample rate, number of channels, and data length.
+  
+- **Playback Control**:
+  - Provides methods to start, stop, pause, and resume playback, allowing for flexible audio management during runtime.
+  
+- **Playback State Management**:
+  - Supports different playback states (STOPPED, PLAYING, PAUSED) to manage audio control flow effectively.
+  
+- **FreeRTOS Integration**:
+  - Operates as a separate FreeRTOS task, enabling non-blocking audio playback while allowing other tasks to run concurrently.
+  
+- **I2S Output Support**:
+  - Utilizes the I2S interface for high-fidelity audio output, making it compatible with various audio DACs and amplifiers.
+  
+- **End-of-File Detection**:
+  - Provides functionality to check if the end of the audio data has been reached, facilitating seamless playback control.
+
+#### Methods Overview:
+- **Constructor**: Initializes the `WAVFileReader` with the specified file name and I2S pin configuration.
+- **open()**: Opens the WAV file and prepares it for playback. Returns true if successful.
+- **startPlayback()**: Begins audio playback from the current position in the WAV file.
+- **stopPlayback()**: Stops playback and resets the current position to the beginning.
+- **pausePlayback()**: Pauses playback, allowing for a temporary halt without losing progress.
+- **resumePlayback()**: Resumes playback from the last paused position.
+- **isEnd()**: Checks if the playback has reached the end of the audio data.
+- **getSampleRate()**: Returns the sample rate of the audio data for compatibility checks.
+- **readSample()**: Reads a single audio sample from the WAV file into the provided buffer.
+
+#### Example Usage:
+```cpp
+#include "WAVFileReader.h"
+
+// Initialize I2S pin configuration
+i2s_pin_config_t i2sPins = {
+    .bck_io_num = 26,   // Bit Clock Pin
+    .ws_io_num = 25,    // Word Select Pin
+    .data_out_num = 22, // Data Out Pin
+    .data_in_num = I2S_PIN_NO_CHANGE
+};
+
+// Create a WAVFileReader instance
+WAVFileReader wavReader("audio.wav", i2sPins);
+
+void setup() {
+    // Initialize SD card, I2S, etc.
+
+    if (wavReader.open()) {
+        wavReader.startPlayback(); // Start playback if the file opened successfully
+    }
+}
+
+void loop() {
+    // Other application logic
+    if (wavReader.isEnd()) {
+        wavReader.stopPlayback(); // Stop playback if end of file is reached
+    }
+}
 ```
+
+### Conclusion
+The `WAVFileReader` class is a powerful tool for integrating audio playback capabilities into ESP32-based projects. Its combination of WAV file handling, playback controls, and FreeRTOS task management makes it suitable for a variety of interactive audio applications, from simple sound effects to complex audio playback systems.
+
+# WAVFileWriter Class
+
+The `WAVFileWriter` class is a robust utility for creating and writing WAV audio files directly onto an SD card using the ESP32 platform. This class abstracts the complexities of handling WAV file structures, making it a crucial tool for any application involving audio recording or processing.
+
+## Key Features:
+- **WAV File Header Management**: Automatically constructs the WAV file header according to the WAV format specifications, including RIFF, WAVE, and fmt chunks.
+- **Audio Sample Writing**: Capable of writing audio frames in both mono (1 channel) and stereo (2 channels) formats, allowing flexibility in audio data representation.
+- **Dynamic Configuration**: Users can configure the number of audio channels, sampling rate, and expected duration at the time of object instantiation, accommodating various audio project requirements.
+- **Automatic Data Length Calculation**: The class computes the data length based on the number of samples written, ensuring the WAV file header accurately reflects the file size upon closure.
+- **File Management**: Efficiently handles file operations, including opening the file for writing and ensuring it is closed properly, preventing resource leaks and file corruption.
+
+## Public Methods:
+- **Constructor**: 
+  - `WAVFileWriter(const char* file_name, short num_channels, int sample_rate, int duration_seconds, String Folder)`: Initializes the WAV file writer with the specified parameters and prepares the file for audio data writing.
+  
+- **writeFrame**: 
+  - `void writeFrame(int16_t left_sample, int16_t right_sample)`: Writes a single frame of audio samples (left and right for stereo) to the WAV file. If in mono mode, the right sample can be set to zero.
+
+- **close**: 
+  - `void close()`: Finalizes the WAV file by writing the necessary header information and closing the file, ensuring all data is properly saved.
+
+## Example Usage:
+
+```cpp
+#include <SD.h>
+#include "WAVFileWriter.h"
+
+// Create an instance of WAVFileWriter
+WAVFileWriter wavWriter("audio.wav", 2, 44100, 60, "AudioFolder");
+
+void setup() {
+    // Initialize Serial for debugging
+    Serial.begin(115200);
+
+    // Initialize SD card
+    if (!SD.begin()) {
+        Serial.println("SD Card initialization failed!");
+        return;
+    }
+
+    // Attempt to open the WAV file for writing
+    if (wavWriter.open()) {
+        Serial.println("WAV file opened successfully.");
+
+        // Simulate writing audio frames
+        for (int i = 0; i < 44100 * 60; ++i) { // 60 seconds of audio
+            int16_t leftSample = random(-32768, 32767);  // Generate random sample data
+            int16_t rightSample = random(-32768, 32767); // Generate random sample data
+            wavWriter.writeFrame(leftSample, rightSample);
+        }
+
+        // Close the WAV file after writing
+        wavWriter.close();
+        Serial.println("WAV file written and closed successfully.");
+    } else {
+        Serial.println("Failed to open WAV file for writing.");
+    }
+}
+
+void loop() {
+    // Additional application logic can be implemented here
+}
+```
+
+## Conclusion
+The `WAVFileWriter` class is a vital component for developers working with audio recording on the ESP32 platform. By simplifying the process of WAV file management and audio data writing, it enables the rapid development of audio applications while ensuring compliance with standard WAV file formats. This class is especially useful in projects involving music playback, voice recording, or any other application where audio data needs to be stored in a WAV format.
+
+# SpeakerManager Class
+
+The `SpeakerManager` class is responsible for managing audio playback and recording functionalities on the ESP32 platform. It serves as a high-level interface that integrates various components such as the `WAVFileReader`, `WAVFileWriter`, and `MicManager` to facilitate audio operations. 
+
+## Features
+- **Audio Playback**: Control playback of WAV audio files with functions to start, stop, pause, and resume.
+- **Volume Control**: Set and adjust the playback volume.
+- **Audio Recording**: Record audio from a microphone and save it in WAV format.
+- **Noise Reduction**: Apply basic noise reduction algorithms on recorded audio samples to enhance sound quality.
+
+## Constructor
+```cpp
+SpeakerManager(
+    WAVFileReader* wavfileReader, // Pointer to the WAVFileReader instance
+    WAVFileWriter* wavfileWriter,   // Pointer to the WAVFileWriter instance
+    MicManager* micManager,         // Pointer to the MicManager instance for audio input
+    i2s_pin_config_t* i2sPins,     // I2S pin configuration structure
+    I2SManager* i2SManager          // Pointer to the I2SManager for handling audio output
+);
+```
+
+## Public Methods
+- `void begin()`: Initializes the Speaker Manager.
+- `void startPlayback(const char *file_name)`: Starts playback of the specified WAV file.
+- `void stopPlayback()`: Stops the currently playing audio.
+- `void pausePlayback()`: Pauses the audio playback.
+- `void resumePlayback()`: Resumes the paused audio playback.
+- `void setVolume(int volume)`: Sets the current playback volume.
+- `void startRecording()`: Initiates audio recording.
+- `void stopRecording()`: Stops the recording process.
+- `void recordAudio(const int duration_seconds, const char *file_name, const int sample_rate, String Folder)`: Records audio for the specified duration and saves it as a WAV file.
+
+## Dependencies
+- **Preferences**: For storing configuration settings.
+- **I2SManager**: For handling I2S audio output.
+- **WAVFileReader**: For reading WAV file formats.
+- **WAVFileWriter**: For writing audio data to WAV files.
+- **MicManager**: For managing audio input from the microphone.
+
+## Usage Example
+```cpp
+// Create instances of the required components
+WAVFileReader wavReader("audio.wav");
+WAVFileWriter wavWriter("output.wav", 2, 44100, 10, "/audio");
+MicManager micManager;
+
+// Initialize the Speaker Manager
+SpeakerManager speakerManager(&wavReader, &wavWriter, &micManager, &i2sPins, &i2sManager);
+speakerManager.begin();
+
+// Start playback
+speakerManager.startPlayback("audio.wav");
+
+// Start recording
+speakerManager.startRecording();
+speakerManager.recordAudio(10, "recorded.wav", 44100, "/audio");
+speakerManager.stopRecording();
+```
+
+## Notes
+- Ensure proper configuration of I2S pins for audio playback and recording.
+- The SD card must be initialized before reading/writing WAV files.
+
+This `SpeakerManager` class streamlines audio management tasks, making it an essential component for any ESP32 audio application.
+
+
+# SPIFlashManager Class
+
+The `SPIFlashManager` class provides a robust interface for managing file operations on the SPIFFS (SPI Flash File System) of the ESP32 microcontroller. This class streamlines the process of file handling by enabling users to easily read, write, check for the existence of files, and obtain file sizes stored in flash memory. It is particularly useful in embedded applications where efficient storage and retrieval of data are crucial.
+
+## Features
+- **Initialization**: Use the `begin()` method to initialize the SPIFFS filesystem before performing any file operations.
+- **File Writing**: The `writeFile()` method allows you to save data to files in the SPIFFS, enabling storage of arbitrary data types.
+- **File Reading**: Retrieve stored data using the `readFile()` method, which reads the contents of a specified file into a buffer.
+- **File Existence Check**: Quickly check if a file exists in the filesystem with the `fileExists()` method.
+- **File Size Retrieval**: Get the size of a specific file with `getFileSize()`, useful for managing storage space.
+
+## Usage Example
+Here’s a basic example of how to use the `SPIFlashManager` class:
+
+```cpp
+SPIFlashManager flashManager;
+
+// Initialize SPIFFS
+flashManager.begin();
+
+// Writing data to a file
+const char* data = "Hello, World!";
+if (flashManager.writeFile("/hello.txt", (const uint8_t*)data, strlen(data))) {
+    Serial.println("File written successfully.");
+}
+
+// Reading data from a file
+uint8_t buffer[50];
+if (flashManager.readFile("/hello.txt", buffer, sizeof(buffer))) {
+    Serial.println("File read successfully: " + String((char*)buffer));
+}
+
+// Checking if a file exists
+if (flashManager.fileExists("/hello.txt")) {
+    Serial.println("File exists.");
+}
+
+// Getting the size of a file
+size_t fileSize = flashManager.getFileSize("/hello.txt");
+Serial.print("File size: ");
+Serial.println(fileSize);
+```
+
+## Error Handling
+Each method in the `SPIFlashManager` class returns a boolean value indicating success or failure, allowing you to implement error handling as needed.
+
+## Dependencies
+- `Arduino.h`: Required for basic Arduino functionality.
+- `SPIFFS.h`: Necessary for working with the SPIFFS filesystem.
+
+The `SPIFlashManager` class is a vital tool for developers working on ESP32 projects, simplifying file management in embedded applications and enabling efficient resource usage.
+
 ## Getting Started
 
 ### Prerequisites
@@ -704,4 +955,3 @@ Feel free to open issues, suggest features, or contribute directly with pull req
 This project is licensed under the MIT License.
 
 --- 
-

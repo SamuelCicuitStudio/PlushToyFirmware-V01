@@ -58,7 +58,7 @@
 #define BASED_RESPONSE_NAME "/AudioResponse.mp3"            ///< Base name for audio response files
 #define BUFFER_TTS_SIZE 4096                                 ///< Buffer size for Text-to-Speech
 #define STREAM_TIMEOUT 200                                    ///< Stream timeout in milliseconds
-
+#define READING_STACK_SIZE 4096
 // ==================================================
 // GPIO Pin Definitions
 // ==================================================
