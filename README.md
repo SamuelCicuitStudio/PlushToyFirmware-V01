@@ -617,57 +617,67 @@ The `SDCardManager` class provides an easy-to-use interface for managing file op
 ```
 # MicManager Class
 
-The `MicManager` class provides a structured approach for managing audio input through an I2S-based microphone. It offers essential functionalities such as gain control, high-pass filtering, and direct reading of microphone output, making it ideal for applications requiring clear, filtered audio data.
+The `MicManager` class is a comprehensive solution for managing I2S-based microphones in Arduino projects. It offers functionalities that facilitate microphone initialization, gain adjustment, and audio data processing, ensuring high-quality audio input and effective noise reduction.
 
-## Key Features
-- **Gain Control**: Dynamically adjust the microphone gain to suit specific audio requirements.
-- **High-Pass Filtering**: Removes low-frequency noise and DC offset from microphone readings, delivering a cleaner audio signal.
-- **Real-Time Data Retrieval**: Access real-time microphone output through a straightforward API, suitable for audio processing or analysis.
+## Features
+
+### 1. Microphone Initialization
+- **`begin()` Method**: This method initializes the microphone by configuring necessary parameters and preparing the I2S interface. It ensures that the microphone is ready to capture audio input immediately after instantiation.
+
+### 2. Gain Control
+- **`setGain(int gain)` Method**: Users can adjust the microphone's sensitivity by setting the gain level. This feature is critical for applications requiring different audio input levels, such as voice recording in noisy environments or capturing soft sounds. 
+    - **Parameters**: 
+      - `gain`: An integer value representing the desired gain level. Higher values increase sensitivity, while lower values decrease it.
+
+### 3. Audio Data Processing
+- **`readOutput()` Method**: This method retrieves the current output value from the microphone after applying a high-pass filter. The high-pass filter removes DC offset and low-frequency noise, resulting in cleaner audio signals, making this class suitable for applications like speech recognition or audio analysis.
+    - **Returns**: An integer representing the processed microphone output value.
+
+## Internal Implementation
+
+### Private Member Variables
+- **`float alpha`**: A filter coefficient (set to `0.98`) used in the high-pass filter algorithm to control the amount of filtering applied. This value can be adjusted to tune the filter's responsiveness.
+- **`float lastMicValue`**: Stores the last microphone output value to facilitate filtering.
+- **`float filteredMicValue`**: Holds the most recent filtered output from the microphone, ensuring that only clean audio data is processed.
 
 ## Dependencies
-- **I2SManager**: Ensures proper setup and communication with the I2S peripheral, required for microphone operation.
-- **Arduino Library**: Provides foundational Arduino functions and data types.
 
-## Class Interface
-
-- **Constructor**
-  - `MicManager()`: Initializes the `MicManager` class with default filter settings.
-
-- **Public Methods**
-  - `void begin()`: Initializes the microphone hardware and prepares it for capturing audio data.
-  - `void setGain(int gain)`: Sets the microphone gain level, allowing for sensitivity adjustment based on application needs.
-  - `int readOutput()`: Retrieves the current microphone output after applying high-pass filtering.
-
-## Private Members
-- `alpha`: The filter coefficient used in the high-pass filter to control noise attenuation.
-- `lastMicValue`: Stores the previous microphone reading for use in the high-pass filter calculation.
-- `filteredMicValue`: Holds the current high-pass filtered value, giving a smoothed output for consistent data readings.
+- **I2SManager**: The `MicManager` class relies on the `I2SManager` class to configure and manage I2S audio data streams. Ensure that you have an appropriate `I2SManager` instance created and initialized before using this class.
+- **Arduino**: The standard Arduino library is utilized for basic functionalities and data types.
 
 ## Usage Example
 
 ```cpp
+#include "I2SManager.h"
 #include "MicManager.h"
 
+// Create instances of I2SManager and MicManager
+i2s_pin_config_t pinConfig = {/* configure your pins here */};
+I2SManager i2sManager(pinConfig, 44100);  // Example sample rate
 MicManager mic;
 
 void setup() {
-    Serial.begin(9600);
-    mic.begin();       // Initialize the microphone
-    mic.setGain(5);    // Set microphone gain as needed
+    i2sManager.begin();  // Initialize I2S manager
+    mic.begin();         // Initialize microphone
+    mic.setGain(10);     // Set desired microphone gain
 }
 
 void loop() {
-    int audioData = mic.readOutput();  // Retrieve the filtered microphone data
-    Serial.println(audioData);         // Output the audio data to the serial monitor
-    delay(10);
+    int micOutput = mic.readOutput();  // Read microphone output
+    // Process micOutput as needed
 }
 ```
 
-## Additional Notes
-- **Filtering**: The `readOutput` method applies a high-pass filter to reduce low-frequency noise, making the class particularly useful in environments where audio clarity is critical.
-- **Gain Configuration**: `setGain` can be fine-tuned for applications with varying audio sensitivity requirements, such as voice recognition or sound detection.
-  
-This class is designed to be simple and effective for real-time audio data collection, making it versatile for projects involving voice commands, environmental noise monitoring, or other audio-based features.
+## Notes
+
+- Ensure that the `I2SManager` instance is properly configured before initializing the `MicManager` class to avoid runtime issues.
+- The high-pass filter implemented in the `readOutput()` method helps mitigate low-frequency noise and DC offsets, making it suitable for audio applications where clarity and quality are paramount.
+- This class is ideal for various applications, including voice-controlled systems, audio recording, and environmental sound analysis, where high-quality microphone input is essential.
+
+## Conclusion
+
+The `MicManager` class simplifies the process of working with I2S microphones in Arduino projects, providing a user-friendly interface to manage microphone settings and ensure high-quality audio input. Whether you're building a voice assistant, a sound recording device, or an interactive audio system, `MicManager` is a valuable tool in your development toolkit.
+```
 ## Getting Started
 
 ### Prerequisites
