@@ -37,7 +37,7 @@
 #define WIFISSID "WIFSSID"                                   ///< Wi-Fi SSID
 #define WIFIPASS "WIFPASS"                                   ///< Wi-Fi password
 #define RESET_FLAG "RST"                                     ///< Reset flag
-
+#define FIRMWARE_VERSION "FIRVER"
 // ==================================================
 // File Paths and Naming
 // ==================================================
@@ -83,7 +83,11 @@
 #define SPI_CS_FL_PIN 1                                      ///< Flash chip select pin
 #define HOLD_PIN 35                                          ///< Hold pin for flash
 #define WP_FL_PIN 40                                         ///< Write protect pin for flash
-
+// ==================================================
+// OTA SETTINGS
+// ==================================================
+#define OTA_UPDATE_URL "http/update.com"
+#define DEFAULT_FIRMWARE_VERSION "1.0.0"
 // ==================================================
 // Microphone Module (MAX9814ETD) Pins
 // ==================================================

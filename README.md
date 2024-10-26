@@ -354,6 +354,73 @@ To integrate the `WiFiManager` class into your ESP32 project, follow these steps
 #### Example HTML Structure:
 To serve the HTML pages, ensure that you have the corresponding HTML files in the SPIFFS file system, such as `/welcome.html`, `/wifiCredentialsPage.html`, and `/gpiomanager.html`.
 
+# OtaManager Class
+
+The `OtaManager` class enables easy Over-the-Air (OTA) firmware updates for ESP32 devices by checking for new firmware versions from a remote server, downloading the latest firmware, and automatically applying the update if available. This functionality is particularly useful for remotely managing device updates without requiring physical access, making it an ideal solution for IoT applications.
+
+### Features
+
+- **Automatic Version Check**: Queries a remote server for the latest firmware version.
+- **Secure Firmware Download**: Downloads firmware binaries from a specified server URL.
+- **Firmware Update Process**: Validates the update process to ensure full downloads and complete update integrity.
+- **ConfigManager Integration**: Utilizes a configuration manager for retrieving and storing the current firmware version and settings.
+- **Debugging Output**: Includes Serial output for debugging to confirm status messages during the update process.
+
+### Class Reference
+
+#### Constructor
+
+- **`OtaManager(ConfigManager* configManager)`**
+  - Constructs an `OtaManager` instance with an associated `ConfigManager`, which provides access to configuration data such as the current firmware version and update URL.
+
+#### Public Methods
+
+- **`void begin()`**
+  - Initializes the OTA update manager, setting up the current firmware version and update URL. Prints debugging messages if `DEBUGMODE` is enabled.
+  
+- **`void checkForUpdate()`**
+  - Checks if a new firmware version is available on the server. If a new version is detected, it triggers the download and update process.
+  
+- **`void downloadAndUpdateFirmware(const String& firmwareURL)`**
+  - Downloads the firmware binary from the provided `firmwareURL`, writes it to flash memory, and completes the update. If successful, initiates a system reboot to apply the new firmware.
+
+#### Private Methods
+
+- **`bool isNewVersionAvailable()`**
+  - Checks if the latest firmware version on the server differs from the current version stored in the device. Returns `true` if an update is available.
+
+### Example Usage
+
+Here's how you can integrate `OtaManager` into your ESP32 project:
+
+```cpp
+#include "OtaManager.h"
+#include "ConfigManager.h"
+
+ConfigManager configManager;
+OtaManager otaManager(&configManager);
+
+void setup() {
+    otaManager.begin();        // Initialize OTA with current version
+    otaManager.checkForUpdate(); // Check for available firmware updates
+}
+
+void loop() {
+    // Application logic
+}
+```
+
+### Requirements
+
+- **Libraries**:
+  - **Arduino.h**: Provides basic functions for ESP32.
+  - **HTTPClient**: Enables HTTP communication for fetching firmware versions and binary files.
+  - **Update**: Manages the OTA update process for ESP32.
+
+### Notes
+
+- The `ConfigManager` class must be configured to store and retrieve the firmware version.
+- Debugging output is available if `DEBUGMODE` is enabled, allowing step-by-step tracing of the update process.
 ## Getting Started
 
 ### Prerequisites
