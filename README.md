@@ -83,7 +83,7 @@ Below is an overview of how the classes interact in the **SmartPlushToy** system
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/SmartPlushToy.git
+   git clone https://github.com/SamuelCicuitStudio/PlushToyFirmware-V01.git
    cd SmartPlushToy
    ```
 2. Open in VS Code and use PlatformIO to configure your build environment.
