@@ -16,7 +16,7 @@
  * Initializes the WiFiManager object, setting default values for the access point 
  * credentials and other configurations.
  */
-WiFiManager::WiFiManager():configManager(configManager),server(80),isAPMode(false), apSSID(DEFAULT_AP_SSID),apPassword(DEFAULT_AP_PASSWORD){}
+WiFiManager::WiFiManager(ConfigManager* configManager):configManager(configManager),server(80),isAPMode(false), apSSID(DEFAULT_AP_SSID),apPassword(DEFAULT_AP_PASSWORD){}
 /**
  * @brief Begins the WiFiManager initialization process.
  *

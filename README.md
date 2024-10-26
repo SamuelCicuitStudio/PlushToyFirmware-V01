@@ -15,6 +15,7 @@ Here's a quick navigation guide to access the different class descriptions:
 - [**ConfigManager Class**](#configmanager-class)
 - [**WiFiManager Class**](#wifimanager-class)
 - [**OtaManager Class**](#otamanager-class)
+- [**I2SManager Class**](#i2smanager-class)
 
 
 ### 1. Configuration Files
@@ -431,6 +432,106 @@ void loop() {
 
 - The `ConfigManager` class must be configured to store and retrieve the firmware version.
 - Debugging output is available if `DEBUGMODE` is enabled, allowing step-by-step tracing of the update process.
+
+# I2SManager Class
+
+The `I2SManager` class provides a streamlined interface for controlling I2S (Inter-IC Sound) audio playback on the ESP32, allowing developers to handle real-time audio applications. With easy-to-use methods for playback control and sample handling, this class simplifies the setup and management of I2S for audio streaming, such as music playback, sound effects, or other audio projects.
+
+## Key Features
+- **Simple Initialization:** Configure pins and sample rate, then start streaming audio effortlessly.
+- **Playback Control:** Start, pause, resume, and stop audio playback with straightforward methods.
+- **Real-time Audio Support:** Designed to handle and output audio samples in real-time.
+
+## Prerequisites
+This class is designed for use with the ESP32 microcontroller and requires the **ESP-IDF I2S driver**, available in the ESP32 Arduino core.
+
+## Usage
+
+### Quick Start Example
+
+```cpp
+#include "I2SManager.h"
+
+// Define I2S pins
+i2s_pin_config_t pins = {
+    .bck_io_num = 26,          // Bit clock line
+    .ws_io_num = 25,           // Word select (LRCK) line
+    .data_out_num = 22,        // Data output line
+    .data_in_num = I2S_PIN_NO_CHANGE  // No data input
+};
+
+int sampleRate = 44100;        // Set sample rate to 44.1 kHz (CD quality)
+I2SManager i2sManager(pins, sampleRate);
+
+void setup() {
+    Serial.begin(115200);
+    i2sManager.begin();        // Start the I2S audio stream
+}
+
+void loop() {
+    int16_t sample = generateAudioSample();  // Replace with your audio sample source
+    i2sManager.writeSample(sample);          // Send sample to I2S
+
+    // Example playback control
+    delay(1000);
+    i2sManager.pause();         // Pause playback
+    delay(1000);
+    i2sManager.resume();        // Resume playback
+    delay(1000);
+    i2sManager.stop();          // Stop playback
+}
+```
+
+### Class Methods
+
+The `I2SManager` class includes several methods to control I2S playback and handle audio samples:
+
+1. **Constructor**
+   - `I2SManager(i2s_pin_config_t pins, int sample_rate);`
+   - Configures the I2S driver with specified pin assignments and sample rate.
+
+2. **begin()**
+   - Initializes and begins I2S audio streaming.
+   - Should be called in the setup phase after creating an `I2SManager` instance.
+
+3. **writeSample(int16_t sample)**
+   - Sends a 16-bit audio sample to the I2S peripheral for output.
+   - Only writes if the playback state is active (`isPlaying()` returns `true`).
+
+4. **pause()**
+   - Pauses the audio stream without stopping or resetting the driver.
+   - Call `resume()` to continue playback.
+
+5. **resume()**
+   - Resumes audio playback if it was paused.
+   
+6. **stop()**
+   - Completely halts audio playback and stops the I2S driver.
+   
+7. **isPlaying()**
+   - Returns `true` if the I2S stream is actively playing; otherwise, returns `false`.
+
+## Dependencies
+The following libraries are required:
+- `Arduino.h` for basic ESP32 compatibility with the Arduino IDE.
+- `driver/i2s.h` for ESP32-specific I2S driver functions.
+
+## Installation
+
+To use `I2SManager`, include the file in your ESP32 project and ensure you have the necessary libraries in your Arduino IDE or ESP-IDF setup.
+
+1. Clone the repository to your project’s library folder or include the `.cpp` and `.h` files directly.
+2. Ensure your ESP32 board library is installed and up-to-date.
+3. Include `I2SManager.h` in your code and initialize the class with appropriate settings.
+
+## Configuration
+
+### Pin Configuration
+Assign I2S-specific pins (such as bit clock, word select, and data out) when creating the `i2s_pin_config_t` structure. Ensure these pins are compatible with your ESP32 board’s configuration.
+
+### Sample Rate
+Set a sample rate that matches your audio requirements, such as `44100` for CD quality or `16000` for voice applications.
+
 ## Getting Started
 
 ### Prerequisites
@@ -457,6 +558,4 @@ Feel free to open issues, suggest features, or contribute directly with pull req
 This project is licensed under the MIT License.
 
 --- 
-
-
 

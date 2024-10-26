@@ -56,7 +56,7 @@
 class WiFiManager {
 public:
     // Constructor
-    WiFiManager();
+    WiFiManager(ConfigManager* configManager);
     // Destructor to clean up allocated managers
 
 
@@ -74,6 +74,7 @@ private:
     void handleSaveWiFi(AsyncWebServerRequest* request);
     void handleGPIO(AsyncWebServerRequest* request);
 
+    ConfigManager* configManager;
     AsyncWebServer server;
     bool isAPMode;
     String apSSID;
