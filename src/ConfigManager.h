@@ -1,5 +1,26 @@
 #ifndef CONFIG_MANAGER_H
 #define CONFIG_MANAGER_H
+/**
+ * @file ConfigManager.h
+ * @brief Configuration Manager for ESP32
+ * 
+ * The `ConfigManager` class provides a structured way to manage application 
+ * configurations using the ESP32 Preferences library. It allows for saving 
+ * and retrieving various data types, including boolean, integer, float, and 
+ * string values, to persistent storage. The class is designed to simplify 
+ * configuration management, enabling easy access and modification of settings 
+ * across system restarts.
+ * 
+ * Key features include:
+ * - Initialization and termination of configuration access.
+ * - Methods for storing and retrieving configuration values.
+ * - System control methods to restart the system or simulate power down for testing.
+ * - Utility functions to manage application flags and reset conditions.
+ * 
+ * This class is especially useful in applications where persistent configuration 
+ * data is necessary, such as in IoT devices that require configuration 
+ * management across power cycles.
+ */
 
 #include "Config.h"  // Include Config.h for default values
 #include <Preferences.h>

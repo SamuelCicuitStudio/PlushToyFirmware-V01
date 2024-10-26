@@ -241,6 +241,57 @@ void loop() {
 }
 ```
 
+# ConfigManager Class
+
+The `ConfigManager` class provides an efficient way to manage configuration settings for ESP32 applications using the Preferences library. This class allows for easy storage, retrieval, and management of various data types, including boolean, integer, float, and string values. It also includes functionality to reset the system and simulate power-down scenarios.
+
+## Features
+
+- **Initialization**: Automatically initializes configuration settings and checks if the device needs to be reset to factory defaults.
+- **Read/Write Preferences**: Provides methods to open preferences in both read-write and read-only modes, allowing for flexible data management.
+- **Data Management**: Supports storing and retrieving various data types:
+  - Booleans
+  - Unsigned integers
+  - Integers
+  - Floats
+  - Strings
+- **Reset Functionality**: Includes methods to reset the device with a countdown and simulate a power-down state through deep sleep.
+- **Debugging Support**: Prints debug messages when enabled, allowing developers to trace execution and monitor configuration changes.
+
+## Usage
+
+To use the `ConfigManager` class, instantiate it with a reference to a `Preferences` object and call its methods to manage your configuration data. Ensure to check the `DEBUGMODE` macro for debugging outputs.
+
+### Example
+
+```cpp
+#include <Preferences.h>
+#include "ConfigManager.h"
+
+Preferences preferences;
+ConfigManager configManager(preferences);
+
+void setup() {
+    configManager.begin(); // Initialize the ConfigManager
+    // Access preferences as needed
+}
+
+void loop() {
+    // Main program logic
+}
+```
+
+## Methods
+
+- **Constructor**: Initializes the `ConfigManager` with a `Preferences` object.
+- **Destructor**: Ensures proper cleanup of the preferences on destruction.
+- **begin()**: Initializes configuration settings and checks for reset flags.
+- **GetBool(), GetInt(), GetFloat(), GetString()**: Retrieve values from preferences.
+- **PutBool(), PutInt(), PutFloat(), PutString()**: Store values in preferences.
+- **RemoveKey()**: Remove a specific key from preferences.
+- **ClearKey()**: Clear all stored preferences.
+- **RestartSysDelay()**: Restarts the system after a specified delay.
+- **simulatePowerDown()**: Simulates a power-down state by putting the ESP32 into deep sleep.
 ## Getting Started
 
 ### Prerequisites
@@ -267,3 +318,6 @@ Feel free to open issues, suggest features, or contribute directly with pull req
 This project is licensed under the MIT License.
 
 --- 
+
+
+
