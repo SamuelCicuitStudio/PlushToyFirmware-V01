@@ -293,11 +293,11 @@ void loop() {
 - **RestartSysDelay()**: Restarts the system after a specified delay.
 - **simulatePowerDown()**: Simulates a power-down state by putting the ESP32 into deep sleep.
 
-Here's a concise GitHub description for the `WiFiManager` class, suitable for the repository's README file or documentation section:
+Here's an expanded GitHub description for the `WiFiManager` class, including detailed comments and a usage example:
 
 ### WiFiManager Class
 
-The `WiFiManager` class provides an efficient way to manage Wi-Fi connectivity for ESP32 devices. It simplifies the process of connecting to a Wi-Fi network or initiating an access point (AP) mode for user configuration. Leveraging the ESPAsyncWebServer library, this class serves web pages for Wi-Fi setup and GPIO control, enabling seamless user interaction.
+The `WiFiManager` class provides an efficient and user-friendly way to manage Wi-Fi connectivity for ESP32 devices. It simplifies the process of connecting to a Wi-Fi network or initiating an access point (AP) mode for user configuration. Leveraging the ESPAsyncWebServer library, this class serves web pages for Wi-Fi setup and GPIO control, enabling seamless user interaction.
 
 #### Key Features:
 - **Automatic Mode Selection**: Connects to a specified Wi-Fi network or starts an access point based on stored settings.
@@ -305,13 +305,54 @@ The `WiFiManager` class provides an efficient way to manage Wi-Fi connectivity f
 - **Asynchronous Operations**: Utilizes the ESPAsyncWebServer for non-blocking web requests.
 
 #### Public Methods:
-- `WiFiManager()`: Constructor to initialize the WiFiManager instance.
-- `void begin()`: Starts the Wi-Fi manager and determines the operating mode (Wi-Fi or AP).
-- `void setAPCredentials(const char* ssid, const char* password)`: Sets credentials for the access point.
-- `void setServerCallback()`: Configures server routes for handling web requests.
+- **`WiFiManager()`**: Constructor that initializes the `WiFiManager` instance.
+- **`void begin()`**: Starts the Wi-Fi manager and determines the operating mode (Wi-Fi or AP).
+- **`void setAPCredentials(const char* ssid, const char* password)`**: Sets the SSID and password for the access point mode.
+- **`void setServerCallback()`**: Configures server routes for handling web requests related to Wi-Fi and GPIO operations.
 
-#### Usage
-To integrate `WiFiManager` into your ESP32 project, create an instance, call `begin()`, and set up web routes as needed.
+#### Private Methods:
+- **`void connectToWiFi()`**: Connects to the configured Wi-Fi network.
+- **`void startAccessPoint()`**: Initiates access point mode for user configuration.
+- **`void handleRoot(AsyncWebServerRequest* request)`**: Handles the root request and serves the welcome page.
+- **`void handleSetWiFi(AsyncWebServerRequest* request)`**: Serves the Wi-Fi credentials page.
+- **`void handleSaveWiFi(AsyncWebServerRequest* request)`**: Saves the Wi-Fi credentials provided by the user.
+- **`void handleGPIO(AsyncWebServerRequest* request)`**: Handles GPIO control requests.
+
+#### Usage Example:
+To integrate the `WiFiManager` class into your ESP32 project, follow these steps:
+
+1. **Include the Necessary Libraries**:
+   Make sure to include the necessary libraries in your main file:
+   ```cpp
+   #include <WiFi.h>
+   #include <FS.h>
+   #include <SPIFFS.h>
+   #include <ESPAsyncWebServer.h>
+   #include "WiFiManager.h"
+   ```
+
+2. **Create an Instance of `WiFiManager`**:
+   In your setup function, create an instance of `WiFiManager` and call `begin()` to start the manager:
+   ```cpp
+   WiFiManager wifiManager;
+
+   void setup() {
+       Serial.begin(115200);
+       wifiManager.begin();
+   }
+   ```
+
+3. **Set Access Point Credentials (Optional)**:
+   If you want to set custom credentials for the access point, use the `setAPCredentials` method:
+   ```cpp
+   wifiManager.setAPCredentials("MyAPSSID", "MyAPPassword");
+   ```
+
+4. **Access the Web Interface**:
+   Once initialized, the device will either connect to the specified Wi-Fi network or start an access point. Users can connect to the access point and access the web interface through a browser to configure Wi-Fi settings or control GPIO pins.
+
+#### Example HTML Structure:
+To serve the HTML pages, ensure that you have the corresponding HTML files in the SPIFFS file system, such as `/welcome.html`, `/wifiCredentialsPage.html`, and `/gpiomanager.html`.
 
 ## Getting Started
 
