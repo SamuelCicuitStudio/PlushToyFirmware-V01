@@ -614,7 +614,7 @@ void loop() {
 
 ## Summary
 The `SDCardManager` class provides an easy-to-use interface for managing file operations on an SD card in embedded applications, particularly for audio recording. It ensures reliable recording management with minimal code overhead, supporting efficient file handling for continuous or sequential recordings.
-```
+
 # MicManager Class
 
 The `MicManager` class is a comprehensive solution for managing I2S-based microphones in Arduino projects. It offers functionalities that facilitate microphone initialization, gain adjustment, and audio data processing, ensuring high-quality audio input and effective noise reduction.
