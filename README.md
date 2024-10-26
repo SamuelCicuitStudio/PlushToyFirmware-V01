@@ -21,6 +21,7 @@ Here's a quick navigation guide to access the different class descriptions:
 - [**WAVFileReader Class**](#wavfilereader-class)
 - [**WAVFileWriter Class**](#wavfilewriter-class)
 - [**SpeakerManager Class**](#speaker-manager-class)
+- [**SPIFlashManager Class**](#spiflashmanager-class)
 
 ### 1. Configuration Files
 - **`Config.h`**: Contains global constants and system-wide `#define` directives. Includes default values for GPIO pins, partition configurations, security credentials (passwords), etc. This file acts as a central configuration point for all other classes.
