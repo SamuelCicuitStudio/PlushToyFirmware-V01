@@ -90,8 +90,7 @@
 #define MIC_OUT_PIN 38                                       ///< Microphone output pin
 #define MIC_GAIN_PIN 47                                      ///< Microphone gain control pin
 #define MIC_AR_PIN 21                                        ///< Microphone auto gain control pin
-#define MIC_RESOLUTION 10                                    ///< Resolution of microphone
-
+#define MIC_RESOLUTION 10                                    ///< Resolution of adc  microphone
 #define MIC_RESOLUTION_MIN 0                                 ///< Minimum resolution for microphone
 #define MIC_RESOLUTION_MAX 1024                              ///< Maximum resolution for microphone
 
@@ -101,15 +100,18 @@
 // ==================================================
 // BQ25896RTWR Battery Management System Pins
 // ==================================================
-#define PGOOD_PIN 7                                          ///< Power good pin
-#define STATUS_PIN 6                                         ///< Status pin
-#define PSEL_PIN 8                                           ///< Power select pin
-#define INT_PIN 0                                            ///< Interrupt pin (define if used)
-#define OTG_PIN 0                                            ///< OTG pin (define if used)
-#define CE_PIN 18                                            ///< Chip enable pin
+#define PGOOD_PIN 7                                          ///< Power good pin: Open-drain active low indicator. LOW indicates a good input source if the voltage is within the specified range.
+#define STATUS_PIN 6                                         ///< Status pin: Open-drain charge status output. LOW indicates charging in progress; HIGH indicates charging is complete or disabled. Blinks at 1 Hz on fault.
+#define PSEL_PIN 8                                           ///< BQ25896 PSEL Digital Input: Selects power source. HIGH indicates a USB host source, LOW indicates an adapter source.
+#define INT_PIN 0                                            ///< BQ25896 INT Digital Input: Open-drain interrupt output to report charger device status and fault conditions.
+#define OTG_PIN 0                                            ///< BQ25896 OTG Digital Input: Boost mode enable pin, activated when OTG_CONFIG=1, HIGH with no input source at VBUS.
+#define CE_PIN 18                                            ///< BQ25896 CE Digital Input: Active low charge enable pin. Battery charging is enabled when configured properly and CE is LOW.
 
-#define SDA_PIN 4                                            ///< I2C SDA pin
-#define SCL_PIN 5                                            ///< I2C SCL pin
+#define SDA_PIN 4                                            ///< I2C SDA pin: Serial Data Line for I2C communication.
+#define SCL_PIN 5                                            ///< I2C SCL pin: Serial Clock Line for I2C communication.
+
+#define BQ2589x_ADDR 0x6B                                    ///< BQ25896 I2C Address: The address used for I2C communication with the BQ25896 chip.
+#define STOREVOLTAGE 3750                                    ///< VCHG Voltage for storage: The voltage at which the battery is charged for storage.
 
 // ==================================================
 // BQ25896RTWR Charge Voltage Settings
@@ -176,7 +178,7 @@
 #define NUMSAMPLES 5                                         ///< Number of temperature samples to take
 #define BCOEFFICIENT 3425                                    ///< NTC Thermistor B Coefficient
 #define SERIESRESISTOR 10000                                 ///< NTC Thermistor series resistor
-
+#define ADC_RESOLUTION 10
 // ==================================================
 // Recording Configuration
 // ==================================================

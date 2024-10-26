@@ -182,6 +182,65 @@ The following diagram illustrates the dependency flow among the various classes 
 - **Classes Overview**: This flowchart displays the architecture of the project, illustrating how different components are interconnected.
 - **Dependencies**: The arrows represent calls between classes, indicating which classes invoke methods of other classes. Understanding these relationships is crucial for navigating and maintaining the codebase.
 
+# PowerManager Class
+
+The `PowerManager` class is designed to manage battery operations for devices using the BQ2589x battery management IC. It provides functions to initialize the battery management system, read battery voltage, set charging parameters, and manage power modes.
+
+## Features
+
+- **Battery Management Initialization**: Configures the necessary pins and initializes the BQ2589x IC for operation.
+- **Battery Voltage Reading**: Reads the current battery voltage and returns it in millivolts (mV).
+- **Charging Parameters**: Set and adjust charging voltage and current to optimize battery charging.
+- **Power Mode Control**: Enables features like ship mode and deep sleep for power savings.
+
+## Functionality
+
+### Initialization
+
+- `void begin()`: Initializes power management settings by calling the battery management initialization function.
+
+### Battery Management
+
+- `void initBatteryManagement()`: Configures the pin modes for the BQ2589x and initializes I2C communication.
+
+### Charging Control
+
+- `void setChargingCurrent(uint16_t current)`: Sets the charging current for the battery.
+- `void setChargingVoltage(uint16_t voltage)`: Sets the charging voltage for the battery.
+
+### Power Management
+
+- `void enterSleepMode(uint32_t duration)`: Puts the ESP32 into sleep mode for a specified duration to save power.
+- `void wakeUp()`: Handles the logic for waking up the device from sleep mode.
+
+### Battery Monitoring
+
+- `uint8_t getBatteryLevel()`: Retrieves the battery level as a percentage based on the current battery voltage.
+- `uint16_t readBatteryVoltage()`: Reads the battery voltage using the BQ2589x ADC and returns the value in millivolts (mV).
+
+### Temperature Monitoring
+
+- `float readThermistor()`: Reads the temperature from a thermistor to monitor battery temperature.
+
+## Example Usage
+
+```cpp
+#include "PowerManager.h"
+
+PowerManager powerManager;
+
+void setup() {
+    powerManager.begin(); // Initialize power management
+    uint8_t batteryLevel = powerManager.getBatteryLevel(); // Get battery level
+    Serial.print("Battery Level: ");
+    Serial.println(batteryLevel);
+}
+
+void loop() {
+    // Main loop logic
+}
+```
+
 ## Getting Started
 
 ### Prerequisites
