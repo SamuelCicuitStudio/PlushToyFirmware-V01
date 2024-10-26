@@ -16,6 +16,7 @@ Here's a quick navigation guide to access the different class descriptions:
 - [**WiFiManager Class**](#wifimanager-class)
 - [**OtaManager Class**](#otamanager-class)
 - [**I2SManager Class**](#i2smanager-class)
+- [*# SDCardManager Class*](sdcardmanager-class)
 
 
 ### 1. Configuration Files
@@ -532,6 +533,88 @@ Assign I2S-specific pins (such as bit clock, word select, and data out) when cre
 ### Sample Rate
 Set a sample rate that matches your audio requirements, such as `44100` for CD quality or `16000` for voice applications.
 
+# SDCardManager Class
+
+## Overview
+The `SDCardManager` class provides a structured way to manage SD card initialization and recording file handling on embedded devices. Designed for applications requiring audio recording, it enables reliable storage and retrieval of recorded audio data on an SD card, ensuring efficient filename management and retrieval of the latest recorded files.
+
+## Features
+- **SD Card Initialization**: The `begin()` method initializes the SD card, setting up the SPI bus for communication and creating the required directory for recordings.
+- **Sequential File Naming**: The `getNextRecordingFilename()` function generates unique filenames in sequential order, avoiding file overwrites.
+- **Latest Recording Retrieval**: The `getLastRecordedFilename()` function retrieves the most recently modified file, making it easy to access the latest recording.
+
+## Usage
+### Setup
+To use `SDCardManager`, call the `begin()` method to initialize the SD card and ensure the recording directory is ready.
+```cpp
+SDCardManager sdManager;
+sdManager.begin();
+```
+
+### Creating a New Recording
+To get the next available filename for a new recording, use `getNextRecordingFilename()`. This function returns a unique filename in sequential order.
+```cpp
+String nextFile = sdManager.getNextRecordingFilename();
+```
+
+### Retrieving the Latest Recording
+To access the filename of the last recorded file, use `getLastRecordedFilename()`. This scans the recording directory for the latest file by modification time.
+```cpp
+String lastFile = sdManager.getLastRecordedFilename();
+```
+
+## Class Reference
+
+### `SDCardManager` Constructor
+```cpp
+SDCardManager();
+```
+- Initializes the SD card manager instance.
+
+### `void begin()`
+- Initializes the SD card and sets up the SPI bus, creating the recording folder if it doesn’t exist. Logs SD card initialization status.
+
+### `String getNextRecordingFilename()`
+- Generates a unique, sequential filename for a new recording by checking for existing files.
+- **Returns**: `String` - The next filename for recording, without path or extension.
+
+### `String getLastRecordedFilename()`
+- Retrieves the filename of the most recent recording based on file modification times.
+- **Returns**: `String` - The filename of the latest recorded file.
+
+## Dependencies
+- **SD Library** (`SD.h`): Manages filesystem operations on the SD card.
+- **SPI Library** (`SPI.h`): Enables SPI communication with the SD card.
+- **I2SManager Integration**: Supports potential use with audio recording/playback through I2S.
+
+## Example
+```cpp
+#include "SDCardManager.h"
+
+SDCardManager sdManager;
+
+void setup() {
+    Serial.begin(115200);
+    sdManager.begin();
+
+    String nextFile = sdManager.getNextRecordingFilename();
+    Serial.print("Next filename for recording: ");
+    Serial.println(nextFile);
+
+    String lastFile = sdManager.getLastRecordedFilename();
+    Serial.print("Last recorded file: ");
+    Serial.println(lastFile);
+}
+
+void loop() {
+    // Record, playback, or perform other operations
+}
+```
+
+## Summary
+The `SDCardManager` class provides an easy-to-use interface for managing file operations on an SD card in embedded applications, particularly for audio recording. It ensures reliable recording management with minimal code overhead, supporting efficient file handling for continuous or sequential recordings.
+```
+
 ## Getting Started
 
 ### Prerequisites
@@ -558,4 +641,3 @@ Feel free to open issues, suggest features, or contribute directly with pull req
 This project is licensed under the MIT License.
 
 --- 
-

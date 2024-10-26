@@ -43,7 +43,7 @@
 // ==================================================
 #define EXTENSION ".wav"                                     ///< File extension for audio files
 
-#define BASE_RECORDING_NAME "Recording"                      ///< Base name for recordings
+#define BASED_RECORDING_NAME "Recording"                      ///< Base name for recordings
 #define TRANSCRIBE_FOLDER_PATH "/ForTranscription"           ///< Path for transcription files
 #define BACKUP_FOLDER_PATH "/backupTranscription"            ///< Path for backup transcription files
 #define RECORDING_FOLDER_PATH_ADD "WebRecording/"            ///< Path to web recording log file
