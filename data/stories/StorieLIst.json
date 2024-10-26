@@ -1,0 +1,17 @@
+{
+    "stories": [
+        {
+            "title": "Le Petit Prince.",
+            "path": "/Stories/Le Petit Prince",
+            "segmentCount": 5,
+            "titleAudioPath":"/Stories/Le Petit Prince/Name.wav"
+
+        },
+        {
+            "title": "Cendrillon.",
+            "path": "/Stories/Cendrillon",
+            "segmentCount": 3,
+            "titleAudioPath":"/Stories/Cendrillon/Name.wav"
+        }
+    ]
+}
