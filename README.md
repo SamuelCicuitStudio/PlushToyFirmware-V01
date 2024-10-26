@@ -1,6 +1,6 @@
 ---
 
-# SmartPlushToy Firmware
+# SmartPlushToy Firmware V1.0.0
 
 Welcome to the **SmartPlushToy** firmware repository! This project provides firmware for an ESP32-based plush toy designed for interaction with children through audio feedback, LED displays, games, and more. This document describes the overall architecture, class structure, and basic usage information for developers working on or contributing to this project.
 
@@ -379,7 +379,7 @@ The `OtaManager` class enables easy Over-the-Air (OTA) firmware updates for ESP3
 
 #### Constructor
 
-- **`OtaManager(ConfigManager* configManager)`**
+- **`OtaManager(ConfigManager* configManager,PowerManager* powerManager)`**
   - Constructs an `OtaManager` instance with an associated `ConfigManager`, which provides access to configuration data such as the current firmware version and update URL.
 
 #### Public Methods
@@ -404,7 +404,7 @@ Here's how you can integrate `OtaManager` into your ESP32 project:
 
 ```cpp
 #include "OtaManager.h"
-#include "ConfigManager.h"
+#include "PowerManager.h"
 
 ConfigManager configManager;
 PowerManager* powerManager;
