@@ -292,6 +292,27 @@ void loop() {
 - **ClearKey()**: Clear all stored preferences.
 - **RestartSysDelay()**: Restarts the system after a specified delay.
 - **simulatePowerDown()**: Simulates a power-down state by putting the ESP32 into deep sleep.
+
+Here's a concise GitHub description for the `WiFiManager` class, suitable for the repository's README file or documentation section:
+
+### WiFiManager Class
+
+The `WiFiManager` class provides an efficient way to manage Wi-Fi connectivity for ESP32 devices. It simplifies the process of connecting to a Wi-Fi network or initiating an access point (AP) mode for user configuration. Leveraging the ESPAsyncWebServer library, this class serves web pages for Wi-Fi setup and GPIO control, enabling seamless user interaction.
+
+#### Key Features:
+- **Automatic Mode Selection**: Connects to a specified Wi-Fi network or starts an access point based on stored settings.
+- **Web Interface**: Serves HTML pages for configuring Wi-Fi credentials and controlling GPIO pins.
+- **Asynchronous Operations**: Utilizes the ESPAsyncWebServer for non-blocking web requests.
+
+#### Public Methods:
+- `WiFiManager()`: Constructor to initialize the WiFiManager instance.
+- `void begin()`: Starts the Wi-Fi manager and determines the operating mode (Wi-Fi or AP).
+- `void setAPCredentials(const char* ssid, const char* password)`: Sets credentials for the access point.
+- `void setServerCallback()`: Configures server routes for handling web requests.
+
+#### Usage
+To integrate `WiFiManager` into your ESP32 project, create an instance, call `begin()`, and set up web routes as needed.
+
 ## Getting Started
 
 ### Prerequisites

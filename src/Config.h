@@ -189,8 +189,9 @@
 // ==================================================
 // LED and Button Pin Definitions
 // ==================================================
-#define LED_PIN 13                                           ///< LED pin for status indication
-#define BUTTON_PIN 0                                        ///< Button pin for input
+#define LED_PIN 3                                           ///< LED pin for status indication
+#define BUTTON_01_PIN 9                                        ///< Button pin for input
+#define BUTTON_02_PIN 10                                        ///< Button pin for input
 #define LED_ON HIGH                                         ///< Define LED ON state
 #define LED_OFF LOW                                         ///< Define LED OFF state
 

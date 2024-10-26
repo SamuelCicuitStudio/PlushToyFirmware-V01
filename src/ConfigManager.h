@@ -34,7 +34,7 @@ public:
     void begin();  // Initialize the configuration
     void end();    // End access to preferences
 
-    // Public interface for saving and retrieving data
+   
     void PutBool(const char* key, bool value);      // Save a boolean value
     void PutInt(const char* key, int value);        // Save an integer value
     void PutFloat(const char* key, float value);    // Save a float value

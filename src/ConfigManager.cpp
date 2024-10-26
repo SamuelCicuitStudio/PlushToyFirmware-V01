@@ -113,7 +113,7 @@ void ConfigManager::begin() {
         Serial.println("###########################################################");
     }
     startPreferencesReadWrite();
-    bool resetFlag = GetBool("Reset", true); // Default to true if not set; // Default to Reset flag true 
+    bool resetFlag = GetBool(RESET_FLAG, true); // Default to true if not set; // Default to Reset flag true 
 
     if (resetFlag) {
         if (DEBUGMODE) {
@@ -144,7 +144,7 @@ void ConfigManager::begin() {
  */
 bool ConfigManager::getResetFlag() {
     esp_task_wdt_reset();
-    bool value = preferences.getBool("Reset", true); // Default to true if not set
+    bool value = preferences.getBool(RESET_FLAG, true); // Default to true if not set
     return value;
 }
 
@@ -381,8 +381,8 @@ void ConfigManager::RemoveKey(const char * key) {
  * true. It introduces a delay after updating the preferences.
  */
 void ConfigManager::SetAPFLag() {
-    RemoveKey("strAP");
-    preferences.putBool("strAP", true);
+    RemoveKey(APWIFIMODE_FLAG);
+    preferences.putBool(APWIFIMODE_FLAG, true);
     delay(100);
 }
 
@@ -393,8 +393,8 @@ void ConfigManager::SetAPFLag() {
  * true. It introduces a delay after updating the preferences.
  */
 void ConfigManager::ResetAPFLag() {
-    RemoveKey("strAP");
-    preferences.putBool("strAP", false);
+    RemoveKey(APWIFIMODE_FLAG);
+    preferences.putBool(APWIFIMODE_FLAG, false);
     delay(100);
 };
 
@@ -403,5 +403,5 @@ void ConfigManager::ResetAPFLag() {
  * 
  */
 bool ConfigManager::GetAPFLag() {
-    return preferences.getBool("strAP", true);
+    return preferences.getBool(APWIFIMODE_FLAG, true);
 }
