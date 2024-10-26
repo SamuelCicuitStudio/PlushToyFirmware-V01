@@ -16,7 +16,7 @@ Here's a quick navigation guide to access the different class descriptions:
 - [**WiFiManager Class**](#wifimanager-class)
 - [**OtaManager Class**](#otamanager-class)
 - [**I2SManager Class**](#i2smanager-class)
-- [*# SDCardManager Class*](sdcardmanager-class)
+- [*# SDCardManager Class*](#sdcardmanager-class)
 
 
 ### 1. Configuration Files
