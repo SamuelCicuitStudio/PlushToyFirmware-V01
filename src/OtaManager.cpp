@@ -9,8 +9,8 @@ HTTPClient http;
  * 
  * @param configManager Pointer to a ConfigManager instance that handles configuration data.
  */
-OtaManager::OtaManager(ConfigManager* configManager):
- configManager(configManager){
+OtaManager::OtaManager(ConfigManager* configManager,PowerManager* powerManager):
+ configManager(configManager),powerManager(powerManager){
 // Constructor
 begin();
 }
@@ -38,6 +38,7 @@ void OtaManager::begin() {
  */
 void OtaManager::checkForUpdate() {
     // Query the server for version metadata (assumed to be a JSON file)
+    if(powerManager->isBatteryLow()) return;
 
     http.begin(updateURL);  // URL where version metadata is hosted
     int httpCode = http.GET();
@@ -103,7 +104,7 @@ void OtaManager::downloadAndUpdateFirmware(const String& firmwareURL) {
         size_t written = Update.writeStream(*client);
         if (written == contentLength) {
             Serial.println("Firmware successfully downloaded");
-            configManager->GetString("FIRVER",latestVersion);
+            configManager->GetString(FIRMWARE_VERSION,latestVersion);
         } else {
             Serial.printf("Firmware download incomplete, only %d/%d bytes written\n", written, contentLength);
         }

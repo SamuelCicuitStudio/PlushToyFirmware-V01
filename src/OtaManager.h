@@ -22,7 +22,8 @@
  * @code
  * #include "OTAUpdate.h"
  * ConfigManager configManager;
- * OtaManager otaManager(&configManager);
+ * PowerManager* powerManager;
+ * OtaManager otaManager(&configManager,powerManager);
  * 
  * void setup() {
  *     otaManager.begin();  // Initialize OTA with current version
@@ -35,10 +36,10 @@
  * @endcode
  */
 #include <Arduino.h>
-#include "ConfigManager.h"
+#include "PowerManager.h"
 class OtaManager {
 public:
-    OtaManager(ConfigManager* configManager);  // Constructor
+    OtaManager(ConfigManager* configManager,PowerManager* powerManager);  // Constructor
 
     void begin();  // Initialize OTA with current version and update URL
     void checkForUpdate();  // Check if a new version is available
@@ -49,6 +50,7 @@ private:
     String updateURL;
     String latestVersion;
     ConfigManager* configManager;
+    PowerManager* powerManager;
     bool isNewVersionAvailable();
 };
 

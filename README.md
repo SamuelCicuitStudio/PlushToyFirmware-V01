@@ -407,7 +407,8 @@ Here's how you can integrate `OtaManager` into your ESP32 project:
 #include "ConfigManager.h"
 
 ConfigManager configManager;
-OtaManager otaManager(&configManager);
+PowerManager* powerManager;
+OtaManager otaManager(&configManager,powerManager);
 
 void setup() {
     otaManager.begin();        // Initialize OTA with current version
