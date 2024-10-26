@@ -10,7 +10,7 @@ The firmware for SmartPlushToy is modular, with each key system component encaps
 ### 0. Quick navigation
 Here's a quick navigation guide to access the different class descriptions:
 
-- [**Dependency Flow Chart**](##Dependency-FlowChart)
+- [**Dependency Flow Chart**](#dependency-flow-chart)
 - [**PowerManager Class**](#powermanager-class)
 - [**ConfigManager Class**](#configmanager-class)
 - [**WiFiManager Class**](#wifimanager-class)
